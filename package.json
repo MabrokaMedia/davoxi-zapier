@@ -1,0 +1,27 @@
+{
+  "name": "davoxi-zapier",
+  "version": "1.0.0",
+  "description": "Zapier integration for the Davoxi AI voice agent platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --testTimeout 10000",
+    "validate": "zapier validate",
+    "build": "zapier build",
+    "push": "zapier push",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "zapier-platform-core": "15.x"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "zapier": {
+    "id": 0,
+    "key": "davoxi"
+  },
+  "private": true
+}
