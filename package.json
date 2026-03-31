@@ -1,6 +1,6 @@
 {
   "name": "davoxi-zapier",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Zapier integration for the Davoxi AI voice agent platform",
   "main": "index.js",
   "scripts": {
