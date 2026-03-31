@@ -1,0 +1,32 @@
+name: Deploy to Zapier
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - run: npm ci
+
+      - name: Validate app structure
+        run: node -e "const app = require('./index'); console.log('OK:', Object.keys(app.triggers).length, 'triggers,', Object.keys(app.creates).length, 'creates,', Object.keys(app.searches).length, 'searches')"
+
+      - name: Install Zapier CLI
+        run: npm install -g zapier-platform-cli
+
+      - name: Push to Zapier
+        run: zapier push
+        env:
+          ZAPIER_DEPLOY_KEY: ${{ secrets.ZAPIER_DEPLOY_KEY }}
