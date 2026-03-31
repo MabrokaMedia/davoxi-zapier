@@ -3,7 +3,9 @@
 const { makeRequest } = require('../lib/client');
 
 const perform = async (z, bundle) => {
-  const summary = await makeRequest(z, bundle, 'GET', '/usage/summary');
+  const period = bundle.inputData.period || 'current';
+  const path = `/usage/summary?period=${encodeURIComponent(period)}`;
+  const summary = await makeRequest(z, bundle, 'GET', path);
   // Zapier searches must return an array
   return [summary];
 };
@@ -16,7 +18,16 @@ module.exports = {
     description: 'Gets the current usage summary (total calls, minutes, and cost).',
   },
   operation: {
-    inputFields: [],
+    inputFields: [
+      {
+        key: 'period',
+        label: 'Period',
+        type: 'string',
+        helpText: 'The billing period to retrieve (e.g. "current", "2026-03"). Defaults to current period.',
+        required: false,
+        default: 'current',
+      },
+    ],
     perform,
     sample: {
       total_calls: 150,
