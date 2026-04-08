@@ -23,5 +23,8 @@
     "id": 238666,
     "key": "davoxi"
   },
-  "private": true
+  "private": true,
+  "overrides": {
+    "lodash": ">=4.17.21"
+  }
 }

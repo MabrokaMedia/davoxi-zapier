@@ -24,8 +24,12 @@ const perform = async (z, bundle) => {
   }
 
   if (bundle.inputData.temperature !== undefined) {
+    const temperature = parseFloat(bundle.inputData.temperature);
+    if (isNaN(temperature) || temperature < 0 || temperature > 2) {
+      throw new z.errors.Error('temperature must be a number between 0 and 2.');
+    }
     body.master_config = {
-      temperature: parseFloat(bundle.inputData.temperature),
+      temperature,
     };
   }
 
