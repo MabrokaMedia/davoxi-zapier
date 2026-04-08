@@ -23,5 +23,10 @@ jobs:
 
       - run: npm ci
 
+      - name: Run tests
+        run: npm test
+        env:
+          DAVOXI_TEST_API_KEY: ${{ secrets.DAVOXI_TEST_API_KEY }}
+
       - name: Validate app structure
         run: node -e "const app = require('./index'); console.log('OK:', Object.keys(app.triggers).length, 'triggers,', Object.keys(app.creates).length, 'creates,', Object.keys(app.searches).length, 'searches')"
