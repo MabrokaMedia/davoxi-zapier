@@ -11,6 +11,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@davoxi/validation": "file:../packages/validation",
     "zapier-platform-core": "^18.4.0"
   },
   "devDependencies": {
