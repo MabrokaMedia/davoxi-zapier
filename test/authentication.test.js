@@ -9,7 +9,7 @@ zapier.tools.env.inject();
 describe('authentication', () => {
   test('valid API key authenticates', async () => {
     const bundle = {
-      authData: { api_key: 'sk_test_zapier' },
+      authData: { api_key: process.env.DAVOXI_TEST_API_KEY || 'sk_test_zapier' },
     };
 
     const result = await appTester(App.authentication.test, bundle);

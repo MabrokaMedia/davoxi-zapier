@@ -7,7 +7,7 @@ const appTester = zapier.createAppTester(App);
 zapier.tools.env.inject();
 
 const bundle = {
-  authData: { api_key: 'sk_test_zapier' },
+  authData: { api_key: process.env.DAVOXI_TEST_API_KEY || 'sk_test_zapier' },
   inputData: {},
 };
 

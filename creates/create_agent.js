@@ -1,6 +1,7 @@
 'use strict';
 
 const { makeRequest } = require('../lib/client');
+const { AGENT_LIMITS } = require('@davoxi/validation');
 
 const perform = async (z, bundle) => {
   const body = {
@@ -8,11 +9,29 @@ const perform = async (z, bundle) => {
     system_prompt: bundle.inputData.system_prompt,
   };
 
+  // Client-side validation using shared constants
+  if (!body.description || body.description.length > AGENT_LIMITS.DESCRIPTION_MAX) {
+    throw new z.errors.Error(
+      `Description is required and must be at most ${AGENT_LIMITS.DESCRIPTION_MAX} characters.`,
+    );
+  }
+  if (!body.system_prompt || body.system_prompt.length > AGENT_LIMITS.SYSTEM_PROMPT_MAX) {
+    throw new z.errors.Error(
+      `System prompt is required and must be at most ${AGENT_LIMITS.SYSTEM_PROMPT_MAX} characters.`,
+    );
+  }
+
   if (bundle.inputData.trigger_tags) {
     body.trigger_tags = bundle.inputData.trigger_tags
       .split(',')
       .map((t) => t.trim())
       .filter(Boolean);
+
+    if (body.trigger_tags.length > AGENT_LIMITS.TRIGGER_TAGS_MAX) {
+      throw new z.errors.Error(
+        `At most ${AGENT_LIMITS.TRIGGER_TAGS_MAX} trigger tags allowed.`,
+      );
+    }
   }
 
   if (bundle.inputData.enabled !== undefined) {
