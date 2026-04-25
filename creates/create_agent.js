@@ -1,7 +1,7 @@
 'use strict';
 
 const { makeRequest } = require('../lib/client');
-const { AGENT_LIMITS } = require('@davoxi/validation');
+const { AGENT_LIMITS } = require('../lib/constants');
 
 const perform = async (z, bundle) => {
   const body = {
