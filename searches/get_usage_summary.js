@@ -2,8 +2,13 @@
 
 const { makeRequest } = require('../lib/client');
 
+const PERIOD_RE = /^(current|\d{4}-\d{2})$/;
+
 const perform = async (z, bundle) => {
   const period = bundle.inputData.period || 'current';
+  if (!PERIOD_RE.test(period)) {
+    throw new z.errors.Error('Period must be "current" or in YYYY-MM format (e.g. "2026-03").');
+  }
   const path = `/usage/summary?period=${encodeURIComponent(period)}`;
   const summary = await makeRequest(z, bundle, 'GET', path);
   // Zapier searches must return an array

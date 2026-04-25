@@ -8,10 +8,17 @@ const perform = async (z, bundle) => {
   };
 
   if (bundle.inputData.phone_numbers) {
-    body.phone_numbers = bundle.inputData.phone_numbers
+    const phones = bundle.inputData.phone_numbers
       .split(',')
       .map((p) => p.trim())
       .filter(Boolean);
+    const invalidPhones = phones.filter((p) => !/^\+\d{7,15}$/.test(p));
+    if (invalidPhones.length > 0) {
+      throw new z.errors.Error(
+        `Invalid phone number(s) — must be E.164 format (e.g. +15551234567): ${invalidPhones.join(', ')}`
+      );
+    }
+    body.phone_numbers = phones;
   }
 
   if (bundle.inputData.voice || bundle.inputData.language || bundle.inputData.personality_prompt) {
