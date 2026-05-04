@@ -6,12 +6,18 @@ const App = require('../index');
 const appTester = zapier.createAppTester(App);
 zapier.tools.env.inject();
 
+// Integration tests — require DAVOXI_TEST_API_KEY (see triggers.test.js).
+// Note these create real entities on the live API, so do not run them
+// indiscriminately.
+const REAL_API_KEY = process.env.DAVOXI_TEST_API_KEY;
+const describeIntegration = REAL_API_KEY ? describe : describe.skip;
+
 const bundle = {
-  authData: { api_key: process.env.DAVOXI_TEST_API_KEY || 'sk_test_zapier' },
+  authData: { api_key: REAL_API_KEY || 'sk_test_zapier' },
   inputData: {},
 };
 
-describe('creates', () => {
+describeIntegration('creates', () => {
   test('create_business sends correct payload', async () => {
     const createBundle = {
       ...bundle,

@@ -6,12 +6,16 @@ const App = require('../index');
 const appTester = zapier.createAppTester(App);
 zapier.tools.env.inject();
 
+// Integration tests — require DAVOXI_TEST_API_KEY (see triggers.test.js).
+const REAL_API_KEY = process.env.DAVOXI_TEST_API_KEY;
+const describeIntegration = REAL_API_KEY ? describe : describe.skip;
+
 const bundle = {
-  authData: { api_key: process.env.DAVOXI_TEST_API_KEY || 'sk_test_zapier' },
+  authData: { api_key: REAL_API_KEY || 'sk_test_zapier' },
   inputData: {},
 };
 
-describe('searches', () => {
+describeIntegration('searches', () => {
   test('find_business filters by name', async () => {
     const searchBundle = {
       ...bundle,
