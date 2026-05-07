@@ -1,11 +1,18 @@
 'use strict';
 
 const { makeRequest } = require('../lib/client');
+const { BUSINESS_LIMITS } = require('../lib/constants');
 
 const perform = async (z, bundle) => {
   const body = {
     name: bundle.inputData.name,
   };
+
+  if (typeof body.name !== 'string' || body.name.length === 0 || body.name.length > BUSINESS_LIMITS.NAME_MAX) {
+    throw new z.errors.Error(
+      `name is required and must be at most ${BUSINESS_LIMITS.NAME_MAX} characters.`,
+    );
+  }
 
   if (bundle.inputData.phone_numbers) {
     const phones = bundle.inputData.phone_numbers
@@ -23,9 +30,28 @@ const perform = async (z, bundle) => {
 
   if (bundle.inputData.voice || bundle.inputData.language || bundle.inputData.personality_prompt) {
     body.voice_config = {};
-    if (bundle.inputData.voice) body.voice_config.voice = bundle.inputData.voice;
-    if (bundle.inputData.language) body.voice_config.language = bundle.inputData.language;
+    if (bundle.inputData.voice) {
+      if (bundle.inputData.voice.length > BUSINESS_LIMITS.VOICE_MAX) {
+        throw new z.errors.Error(
+          `voice must be at most ${BUSINESS_LIMITS.VOICE_MAX} characters.`,
+        );
+      }
+      body.voice_config.voice = bundle.inputData.voice;
+    }
+    if (bundle.inputData.language) {
+      if (bundle.inputData.language.length > BUSINESS_LIMITS.LANGUAGE_MAX) {
+        throw new z.errors.Error(
+          `language must be at most ${BUSINESS_LIMITS.LANGUAGE_MAX} characters.`,
+        );
+      }
+      body.voice_config.language = bundle.inputData.language;
+    }
     if (bundle.inputData.personality_prompt) {
+      if (bundle.inputData.personality_prompt.length > BUSINESS_LIMITS.PERSONALITY_PROMPT_MAX) {
+        throw new z.errors.Error(
+          `personality_prompt must be at most ${BUSINESS_LIMITS.PERSONALITY_PROMPT_MAX} characters.`,
+        );
+      }
       body.voice_config.personality_prompt = bundle.inputData.personality_prompt;
     }
   }
