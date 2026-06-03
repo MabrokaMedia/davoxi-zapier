@@ -6,12 +6,19 @@ const App = require('../index');
 const appTester = zapier.createAppTester(App);
 zapier.tools.env.inject();
 
+// Integration tests hit the live Davoxi API. They require a real API key
+// supplied via DAVOXI_TEST_API_KEY (e.g. via GitHub Actions secrets in CI).
+// Without one we skip — running against prod with a placeholder produces 401s
+// and burns CI minutes without exercising any code path under test.
+const REAL_API_KEY = process.env.DAVOXI_TEST_API_KEY;
+const describeIntegration = REAL_API_KEY ? describe : describe.skip;
+
 const bundle = {
-  authData: { api_key: process.env.DAVOXI_TEST_API_KEY || 'sk_test_zapier' },
+  authData: { api_key: REAL_API_KEY || 'sk_test_zapier' },
   inputData: {},
 };
 
-describe('triggers', () => {
+describeIntegration('triggers', () => {
   test('new_business returns sorted businesses', async () => {
     const results = await appTester(
       App.triggers.new_business.operation.perform,

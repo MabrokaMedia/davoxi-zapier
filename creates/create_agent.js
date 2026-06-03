@@ -1,7 +1,7 @@
 'use strict';
 
 const { makeRequest } = require('../lib/client');
-const { AGENT_LIMITS } = require('@davoxi/validation');
+const { AGENT_LIMITS } = require('../lib/constants');
 
 const perform = async (z, bundle) => {
   const body = {
@@ -32,10 +32,19 @@ const perform = async (z, bundle) => {
         `At most ${AGENT_LIMITS.TRIGGER_TAGS_MAX} trigger tags allowed.`,
       );
     }
+    const tooLong = body.trigger_tags.find(
+      (t) => t.length > AGENT_LIMITS.TRIGGER_TAG_LENGTH_MAX,
+    );
+    if (tooLong) {
+      throw new z.errors.Error(
+        `Each trigger tag must be at most ${AGENT_LIMITS.TRIGGER_TAG_LENGTH_MAX} characters.`,
+      );
+    }
   }
 
   if (bundle.inputData.enabled !== undefined) {
-    body.enabled = bundle.inputData.enabled;
+    const v = bundle.inputData.enabled;
+    body.enabled = v === true || v === 'true' || v === 1 || v === '1';
   }
 
   return makeRequest(

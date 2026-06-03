@@ -3,10 +3,14 @@
 const { makeRequest } = require('../lib/client');
 
 const perform = async (z, bundle) => {
-  const businesses = await makeRequest(z, bundle, 'GET', '/businesses');
-  const query = bundle.inputData.name.toLowerCase();
+  const rawName = bundle.inputData.name;
+  if (typeof rawName !== 'string' || rawName.length === 0) {
+    throw new z.errors.Error('name is required and must be a non-empty string.');
+  }
+  const query = rawName.toLowerCase();
 
-  return businesses.filter((b) => b.name.toLowerCase().includes(query));
+  const businesses = await makeRequest(z, bundle, 'GET', '/businesses');
+  return businesses.filter((b) => typeof b.name === 'string' && b.name.toLowerCase().includes(query));
 };
 
 module.exports = {
