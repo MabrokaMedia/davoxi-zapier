@@ -8,7 +8,7 @@ on:
 
 jobs:
   validate:
-    runs-on: [self-hosted, linux, arm64, fast]
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [18, 20]

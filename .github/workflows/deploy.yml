@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, linux, arm64, fast]
+    runs-on: ubuntu-latest
     permissions:
       contents: read
 
